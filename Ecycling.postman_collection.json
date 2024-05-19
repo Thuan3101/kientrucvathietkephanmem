@@ -1,0 +1,338 @@
+{
+	"info": {
+		"_postman_id": "84ba57d4-3817-4eba-a76b-628078aec3a1",
+		"name": "Ecycling",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "18450459"
+	},
+	"item": [
+		{
+			"name": "user-service",
+			"item": [
+				{
+					"name": "register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"Thắng\",\r\n    \"lastName\": \"Hà Duyên\",\r\n    \"email\": \"a@gmail.com\",\r\n    \"password\": \"1234\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/user/register",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var res = pm.response.json();\r",
+									"pm.environment.set('token', res.data.token)"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"a@gmail.com\",\r\n    \"password\": \"1234\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/user/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get my info",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/user/getMe",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"getMe"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "inquiry-service",
+			"item": [
+				{
+					"name": "create new inquiry",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Yêu cầu thu điện thoại iphone 13\",\r\n    \"maker\": {\r\n        \"id\": \"664245a9c456a8718c59fe3c\",\r\n        \"firstName\": \"Thắng\",\r\n        \"lastName\": \"Hà Duyên\"\r\n    },\r\n    \"product\": {\r\n        \"name\": \"iphone 13\",\r\n        \"model\": \"LLA3944\",\r\n        \"attributes\": [\r\n            {\r\n                \"key\": \"color\",\r\n                \"value\": \"Trắng\"\r\n            },\r\n            {\r\n                \"key\": \"size\",\r\n                \"value\": \"6.1 inch\"\r\n            }\r\n        ],\r\n        \"images\": [\"https://didongthongminh.vn/images/products/2022/11/11/original/xanh-la_1668107199_copy.png\"]\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/inquiry/create",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"inquiry",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all inquiries",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/inquiry",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"inquiry"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/inquiry/:id",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"inquiry",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "66446c3fdd880a77627e2073"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Inquiry",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/inquiry/:id",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"inquiry",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "assessment-service",
+			"item": [
+				{
+					"name": "Make assessment",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"inquiryId\": \"66446c3fdd880a77627e2073\",\r\n    \"product\": {\r\n        \"sku\": \"IP13W99\",\r\n        \"name\": \"Iphone 13 128 GB\",\r\n        \"description\": \"Điện thoại Iphone 13 128GB đã qua sử dụng\",\r\n        \"model\": \"LLA\",\r\n        \"likeNewPercent\": 99,\r\n        \"cost\": 5000000,\r\n        \"price\": 8000000,\r\n        \"images\": [\"https://didongthongminh.vn/images/products/2024/05/03/large/iPhone-13.webp\"],\r\n        \"dateOfPurchase\": \"2020-11-10\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/assessment/create",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"assessment",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/assessment",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"assessment"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get By ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/assessment/:id",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"assessment",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "66446ed6ff66195d03a54dda"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Assessment",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"status\": \"destroy\",\r\n    \"result\": \"Sản phẩm hư hỏng nặng, không thể bán lại\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/assessment/:id",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"assessment",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "66446ed6ff66195d03a54dda"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "reporting-service",
+			"item": []
+		}
+	]
+}
