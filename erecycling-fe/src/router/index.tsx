@@ -25,6 +25,10 @@ const InquiryManagement = Loadable(lazy(() => import("@/_dashboard/pages/inquiry
 const CreateUpdateInquiry = Loadable(lazy(() => import("@/_dashboard/pages/inquiry/create-update")));
 
 const AssessmentList = Loadable(lazy(() => import("@/_dashboard/pages/assessment/assessment")));
+const CreateUpdateAssessment = Loadable(lazy(() => import("@/_dashboard/pages/assessment/create-update")));
+
+const ProductList = Loadable(lazy(() => import("@/_dashboard/pages/product/product")));
+const CreateUpdateProduct = Loadable(lazy(() => import("@/_dashboard/pages/product/create")));
 
 const authRoutes: RouteObject = {
   element: <AuthLayout />,
@@ -54,6 +58,15 @@ const shareRouted: RouteObject = {
           path: "/",
           element: <Home />,
         },
+
+        {
+          path: "/inquiry",
+          element: <InquiryManagement />,
+        },
+        {
+          path: "/inquiry/edit",
+          element: <CreateUpdateInquiry />,
+        },
       ],
     },
   ],
@@ -67,16 +80,7 @@ const userDashboardRoute: RouteObject = {
       element: <Guard canAccess={["customer".toUpperCase()]} />,
       children: [
         {
-          path: "/inquiry",
-          element: <InquiryManagement />,
-        },
-        {
           path: "/inquiry/new",
-          element: <CreateUpdateInquiry />,
-        },
-
-        {
-          path: "/inquiry/edit",
           element: <CreateUpdateInquiry />,
         },
       ],
@@ -94,6 +98,27 @@ const adminDashboardRoute: RouteObject = {
         {
           path: "/assessment",
           element: <AssessmentList />,
+        },
+        {
+          path: "/inquiry",
+          element: <InquiryManagement />,
+        },
+        {
+          path: "/assessment/new",
+          element: <CreateUpdateAssessment />,
+        },
+        {
+          path: "/assessment/edit",
+          element: <CreateUpdateAssessment />,
+        },
+        {
+          path: "/product",
+          element: <ProductList />,
+        },
+
+        {
+          path: "/assessment/product/edit",
+          element: <CreateUpdateProduct />,
         },
       ],
     },

@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import { Breadcrumb } from "antd";
+import { Breadcrumb, Button } from "antd";
 import { BiPlus } from "react-icons/bi";
 import Card from "@/components/shared/card";
 import { PiArrowLineUp } from "react-icons/pi";
@@ -44,35 +44,46 @@ const columns: TableColumnsType<ColumnType> = [
   },
 ];
 
-function mapper(data: IInquiry[]): Partial<ColumnType>[] {
+function mapper(data: IInquiry[], role = "customer"): Partial<ColumnType>[] {
   return data.map((inquiry) => {
     const row: Partial<ColumnType> = {};
     row.key = inquiry._id;
-    row.title = inquiry.title
-    row.productName = inquiry.product.name,
-    row.dateCreated = dayjs(inquiry.createdAt).format("DD/MM/YYYY HH:mm"),
-    row.productModel = inquiry.product.model,
-    row.status = inquiry.status == InquiryStatus.IN_PROGRESS ? (
-      <div className="font-medium text-center inline-block px-2 py-0.5 rounded-lg text-green-600 bg-[rgba(34,_197,_94,_0.16)]">
-        {inquiry.status}
-      </div>
-    ) : (
-      <div className="font-medium text-center inline-block px-2 py-0.5 rounded-lg text-red-600 bg-[rgba(255,_86,_48,_0.16)]">
-        {inquiry.status}
-      </div>
-    );
+    row.title = inquiry.title;
+    (row.productName = inquiry.product.name),
+      (row.dateCreated = dayjs(inquiry.createdAt).format("DD/MM/YYYY HH:mm")),
+      (row.productModel = inquiry.product.model),
+      (row.status =
+        inquiry.status == InquiryStatus.IN_PROGRESS ? (
+          <div className="font-medium text-center inline-block px-2 py-0.5 rounded-lg text-green-600 bg-[rgba(34,_197,_94,_0.16)]">
+            {inquiry.status}
+          </div>
+        ) : (
+          <div className="font-medium text-center inline-block px-2 py-0.5 rounded-lg text-red-600 bg-[rgba(255,_86,_48,_0.16)]">
+            {inquiry.status}
+          </div>
+        ));
+    if (role != "customer") {
+      row.action =
+        inquiry.status == InquiryStatus.NEW ? (
+          <Link to={`/assessment/new?inquiry-id=${inquiry._id}`}>
+            <Button>Tiếp nhận yêu cầu</Button>
+          </Link>
+        ) : (
+          <></>
+        );
+    }
     return row;
   });
 }
 
 const MyInquiry = () => {
-  const { isLoading } = useGetAuth();
+  const { data: user, isLoading } = useGetAuth();
   if (isLoading) return <>Loading ....</>;
   return (
     <>
       <div className="mb-5 flex justify-between items-center">
         <div>
-          <h2 className="text-text-dark text-2xl font-bold mb-2">Người dùng</h2>
+          <h2 className="text-text-dark text-2xl font-bold mb-2">Yêu cầu tái chế</h2>
           <div className="flex justify-between items-center">
             <Breadcrumb
               className="text-base font-inter"
@@ -101,18 +112,28 @@ const MyInquiry = () => {
             <PiArrowLineUp fontSize={18} />
             Xuất dữ liệu
           </OutlineBtn>
-          <Link to={"/user/new"}>
+          <Link to={"/inquiry/new"}>
             <PrimaryButton className="flex gap-1 items-center text-sm px-3">
               <BiPlus fontSize={18} />
-              Thêm người dùng
+              Tạo mới yêu cầu
             </PrimaryButton>
           </Link>
         </div>
       </div>
 
-      <UserFilter />
+      {/* <UserFilter /> */}
       <Card className="mt-5 pt-0 px-0">
-        <GenericTable resourceName="inquiry" columns={columns} displayMapper={mapper} enableFilter={false} />
+        {user.role == "customer" ? (
+          <GenericTable resourceName="inquiry" columns={columns} displayMapper={mapper} enableFilter={false} />
+        ) : (
+          <GenericTable
+            resourceName="inquiry"
+            columns={columns}
+            displayMapper={mapper}
+            maunalAddAction={true}
+            enableFilter={false}
+          />
+        )}
       </Card>
     </>
   );

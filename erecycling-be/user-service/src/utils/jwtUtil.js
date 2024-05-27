@@ -1,18 +1,16 @@
-const jwt = require("jsonwebtoken")
+const jwt = require("jsonwebtoken");
 
-const {
-    ACCESS_TOKEN_EXPIRATION,
-    REFRESH_TOKEN_EXPIRATION,
-    JWT_SECRET_KEY,
-} = require("../common/app-constant");
+const { ACCESS_TOKEN_EXPIRATION, REFRESH_TOKEN_EXPIRATION, JWT_SECRET_KEY } = require("../common/app-constant");
 
 exports.signAccessToken = (user) => {
-    return jwt.sign({ id: user._id, role: user.role }, JWT_SECRET_KEY, {
-        expiresIn: ACCESS_TOKEN_EXPIRATION,
-    });
+    return jwt.sign(
+        { id: user._id, role: user.role, firstName: user.firstName, lastName: user.lastName },
+        JWT_SECRET_KEY,
+        {
+            expiresIn: ACCESS_TOKEN_EXPIRATION,
+        }
+    );
 };
-
-
 
 exports.signRefreshToken = (user) => {
     return jwt.sign({ id: user._id }, JWT_SECRET_KEY, {

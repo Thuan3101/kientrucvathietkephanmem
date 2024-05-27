@@ -1,0 +1,31 @@
+Layer bị ảnh hưởng ko có mở rộng dự án
+Microservice
+Dễ mở rộng dễ làm phát triển trong tương lai dễ deplo
+Ko thằng nào phụ thuộc tính độc lập
+
+Fontend react 2 cái người dùng và admin nhân viên xử lý yêu cầu tái chế
+
+các service sẽ giao tiếp với nhau bằng rest api. Ở đây dùng note fetch để gọi api  
+REST API (còn được biết với tên gọi RESTful API) là một giao diện lập trình ứng dụng (API) mà tuân thủ các ràng buộc và quy ước kiến trúc REST được sử dụng trong việc giao tiếp giữa client và server. REST là viết tắt của REpresentational State Transfer
+Gateway là cái khác rồi em. Nó là 1 con service thu thập các api endpoint
+
+
+Tầng Fontend :giao diện
+Tầng API gateway = xác thực vai trò
+Tầng backend data chia 4 tầng:
+assessment-service  =dịch vụ đánh giá
+inquiry-service = dịch vụ điều tra
+user-service = dịch vụ người dung
+report-service = dịch vụ báo cáo
+
+microservice là tập hợp các layered architecture
+có 4 5 cục service
+trong mỗi cục đó mới chia tầng
+nó chia nghiệp vụ thành các dịch vụ n
+nó là 1 dạng của domain driven á, lập trình hướng dịch vụ
+khá giống với service oriented
+nghiệp vụ là gì, ví dụ bài toán tái chế này. em có nghiệp vụ tạo yêu cầu, nghiệp vụ đánh giá, nghiệp vụ quản lý sản phẩm thu mua, nghiệp vụ báo cáo kế toán..
+thì mỗi nghiệp vụ đó tách riêng ra thành các service
+
+Rồi sẽ có case cô hỏi sao lúc tạo assessment ko lấy thông tin prod của user gửi trong inquiry luôn
+Thì em bảo thông tin prod đó là thông tin thiết bị sau khi đã kiểm định, mình cập nhật lại cho chính xác. Vì khi người dùng tạo yêu cầu thì họ chỉ gửi một vài thông tin cơ bản như ảnh và mẫu điện thoại lên thôi 

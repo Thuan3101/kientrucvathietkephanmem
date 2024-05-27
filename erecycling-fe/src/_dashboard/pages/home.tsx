@@ -65,18 +65,6 @@ const HomePage = () => {
           </Col>
         </Row>
       </section>
-
-      <section className="mt-8">
-        <Row gutter={16}>
-          <Col span={14}>
-            <TopSaleProduct />
-            {/* <SaleStatistics /> */}
-          </Col>
-          <Col span={10}>
-            <TrafficSource />
-          </Col>
-        </Row>
-      </section>
     </div>
   );
 };

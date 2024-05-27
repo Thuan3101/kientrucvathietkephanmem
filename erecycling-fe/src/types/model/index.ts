@@ -53,6 +53,7 @@ export interface IInquiry extends GeneralModel<string> {
     lastName: string;
     photo: string;
   };
+  cashbackAmount: number;
   uuid: string;
   title: string;
   status: InquiryStatus;
@@ -81,13 +82,13 @@ export enum ProductStatus {
 }
 
 export interface IProduct1 extends GeneralModel<string> {
+  uuid: string;
   sku: string;
   name: string;
-  description: string;
   model: string;
   likeNewPercent: number;
   status: ProductStatus;
-  const: number;
+  cost: number;
   price: number;
   images: string[];
   dateOfPurchase: Date;
@@ -111,8 +112,9 @@ export interface IAssessment extends GeneralModel<string> {
   status: AssessmentStatus;
   isMoneySentToUser: boolean;
   updatedAt: Date;
-  cashbackAmount: 0;
+  cashbackAmount: number;
   result: string;
-  inquiry: IInquiry;
-  product: IProduct1;
+  inquiry: Partial<IInquiry>;
+  product: Partial<IProduct1>;
+  title: string;
 }

@@ -1,5 +1,9 @@
 const mongoose = require("mongoose");
 const assessmentSchema = new mongoose.Schema({
+    title: {
+        type: String,
+        required: true,
+    },
     checker: {
         id: {
             type: mongoose.Types.ObjectId,
@@ -36,7 +40,7 @@ const assessmentSchema = new mongoose.Schema({
         ref: 'product'
     }
 
-}, {timestamps: true})
+}, { timestamps: true })
 
 const Assessment = mongoose.model("assessment", assessmentSchema);
 module.exports = Assessment;

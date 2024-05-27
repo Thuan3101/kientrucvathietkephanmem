@@ -53,7 +53,7 @@ export async function apiPostCreateResource<T>(data: Partial<T>, resourceName: s
 
 export async function apiEditResource<T extends GeneralModel<T>>(data: Partial<T>, resourceName: string) {
   const response = await genericAxiosInstance.patch<GeneralApiResponse<Partial<T>>>(
-    `/${resourceName}s/${data._id}`,
+    `/${resourceName}/${data._id}`,
     data,
     {
       headers: {
@@ -66,7 +66,7 @@ export async function apiEditResource<T extends GeneralModel<T>>(data: Partial<T
 }
 
 export async function apiDeleteResouce(id: React.Key, resourceName: string) {
-  const response = await genericAxiosInstance.delete<GeneralApiResponse<boolean>>(`/${resourceName}s/${id}`, {
+  const response = await genericAxiosInstance.delete<GeneralApiResponse<boolean>>(`/${resourceName}/${id}`, {
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${JSON.parse(localStorage.getItem("access_token"))}`,

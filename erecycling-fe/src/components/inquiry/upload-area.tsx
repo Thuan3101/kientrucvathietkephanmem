@@ -58,7 +58,7 @@ const UploadArea = ({ allowedTypes, getResult, folderPath, existingImages }: Pro
 
   useEffect(() => {
     setImgUrls([...existingImages]);
-  }, [existingImages]);
+  }, []);
 
   return (
     <>

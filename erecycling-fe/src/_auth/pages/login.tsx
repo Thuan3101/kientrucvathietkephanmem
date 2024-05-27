@@ -44,7 +44,7 @@ const LoginPage = () => {
                 <Image src={"/images/logo/logo.svg"} alt="logo" sizes="100%" preview={false} />
               </div>
               <div className="typewriter">
-                <h1 className="text-xl font-bold">Coolfash Admin</h1>
+                <h1 className="text-xl font-bold">E Recycle</h1>
               </div>
             </div>
             <h2 className="text-2xl font-bold mt-10">Đăng nhập để tiếp tục</h2>
@@ -55,8 +55,8 @@ const LoginPage = () => {
               <BsFillInfoCircleFill fontSize={20} fill="#00B8D9" color="#00B8D9" />
               <div className="">
                 Acc demo email:{" "}
-                <span className="text-[#003768] font-semibold">demo@coolfash.com</span> / Mật khẩu:{" "}
-                <span className="text-[#003768] font-semibold">12345</span>
+                <span className="text-[#003768] font-semibold">staff1@gmail.com</span> / Mật khẩu:{" "}
+                <span className="text-[#003768] font-semibold">1234</span>
               </div>
             </div>
             <form
@@ -106,7 +106,7 @@ const LoginPage = () => {
               <input
                 type="submit"
                 form="credentials-login"
-                className="inline-block rounded-lg h-[40px] bg-primary w-full text-white mt-4 cursor-pointer hover:bg-[rgba(0,_166,_111,_0.8)]"
+                className="inline-block rounded-lg h-[40px] w-full text-white mt-4 cursor-pointer bg-[rgba(0,_166,_111,_0.8)_!important]"
                 value="Đăng nhập"
               />
             )}

@@ -1,6 +1,7 @@
 import axios, { AxiosError } from "axios";
 import { BASE_URL } from "@/common/app-constant";
-import { ILoginResponse, IUser } from "@/types";
+import { ILoginResponse } from "@/types/dto";
+import { IUser } from "@/types/model";
 import { GeneralApiResponse, PageResponse } from "@/types/utils";
 import { GetQueryParams } from "../types/utils";
 

@@ -23,7 +23,9 @@ export const useSignIn = () => {
     onSuccess: (data) => {
       console.log("Authentication successful", data);
       localStorage.setItem("access_token", JSON.stringify(data.data.token));
-      navigate("/");
+      if (data.data.user.role == 'customer')
+        navigate("/inquiry")
+      else navigate("/")
     },
     onError: (error) => {
       console.log(error);
@@ -92,17 +94,19 @@ export function useAddNewResource<T>(resourceName: string) {
     },
     onSuccess: () => {
       toast.success(`Đã tạo mới ${resourceName}`);
-      localStorage.removeItem("new_uid");
+      localStorage.removeItem(`new_${resourceName}_uid`);
       return queryClient.refetchQueries({ queryKey: [`get_list_${resourceName}`] });
     },
     onError: (error) => {
       console.log(error);
-      toast.error("Đã có lỗi xảy ra");
+      if (error instanceof AxiosError) {
+        toast.error(`Đã có lỗi xảy ra: ${error.response.data.message}`);
+      } else toast.error(`Đã có lỗi xảy ra: ${error.message}`);
     },
   });
 }
 
-export function useEditResource<T extends GeneralModel<T>>(resourceName: string) {
+export function useEditResource<T>(resourceName: string) {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ data, resourceName }: { data: Partial<T>; resourceName: string }) => {

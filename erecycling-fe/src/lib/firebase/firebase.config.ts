@@ -14,7 +14,7 @@ const firebaseConfig = {
   storageBucket: "coolfash-vnese01.appspot.com",
   messagingSenderId: "362575106033",
   appId: "1:362575106033:web:a45be244fe60e59afa3e50",
-  measurementId: "G-31XQ107HVR",
+  measurementId: "G-31XQ107HVR"
 };
 
 // Initialize Firebase

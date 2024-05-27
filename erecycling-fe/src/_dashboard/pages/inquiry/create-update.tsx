@@ -1,7 +1,7 @@
-import { useAddNewResource, useEditResource, useGetResourceDetails } from "@/lib/react-query/query";
+import { useAddNewResource, useEditResource, useGetAuth, useGetResourceDetails } from "@/lib/react-query/query";
 import { IInquiry, InquiryStatus } from "@/types/model";
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useSearchParams } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 
 import FullScreenLoader from "@/components/shared/fullscreen-loader";
@@ -10,28 +10,32 @@ import { newInquiryBreadcrumb } from "@/data/component-data";
 import { PiPlusDuotone, PiTrash } from "react-icons/pi";
 import Card from "@/components/shared/card";
 import UploadArea from "@/components/inquiry/upload-area";
+import { useQueryClient } from "@tanstack/react-query";
 
 const generateUID = () => {
-  if (!localStorage.getItem("new_uid")) {
+  if (!localStorage.getItem("new_inquiry_uid")) {
     const id = uuidv4();
-    localStorage.setItem("new_uid", id);
+    localStorage.setItem("new_inquiry_uid", id);
     return id;
   } else {
-    return localStorage.getItem("new_uid");
+    return localStorage.getItem("new_inquiry_uid");
   }
 };
 
 const CreateUpdateInquiry = () => {
   const location = useLocation();
+ 
   const mode = location.pathname.split("/").pop();
   const [images, setImages] = useState([]);
   const [hasData, setHasData] = useState(false);
   const { mutateAsync: newFn, isPending } = useAddNewResource<IInquiry>("inquiry");
-  const { mutateAsync: updateFn } = useEditResource("inquiry");
+  const { mutateAsync: updateFn } = useEditResource<IInquiry>("inquiry");
   const [inquiryId, setInquiryId] = useState(null);
   const { data: myInquiry, isSuccess } = useGetResourceDetails<IInquiry>(inquiryId, "inquiry");
   const [form] = Form.useForm();
-
+  const {data: user} = useGetAuth()
+  const queryClient = useQueryClient();
+  // console.log(iId)
   const [inquiry, setInquiry] = useState<Partial<IInquiry>>({
     uuid: generateUID(),
     product: {
@@ -40,6 +44,7 @@ const CreateUpdateInquiry = () => {
       attributes: [],
       images: [...images],
     },
+    cashbackAmount: 0,
     status: InquiryStatus.NEW,
     isMoneyReturned: false,
     title: "",
@@ -58,22 +63,40 @@ const CreateUpdateInquiry = () => {
   };
 
   const retrieveUploadedUrls = (data: string[]) => {
-    console.log(data);
+    // console.log(data);
     setImages(data);
   };
 
   const submitForm = () => {
     console.log(form.getFieldsValue());
+    const data = {
+      ...inquiry,
+      title: form.getFieldValue("title"),
+      status:  form.getFieldValue("status"),
+      cashbackAmount: form.getFieldValue("cashbackAmount"),
+      product: {
+        model: form.getFieldValue("productModel"),
+        name: form.getFieldValue("productName"),
+        attributes: form.getFieldValue("productAttributes"),
+        images: [...inquiry.product.images, ...images],
+      },
+    };
+    setInquiry(data);
+
+    console.log(data);
+
     if (mode === "new") {
-      newFn({ data: inquiry, resourceName: "inquiry" });
+      newFn({ data: data, resourceName: "inquiry" });
     } else {
-      updateFn({ data: inquiry, resourceName: "inquiry" });
+      updateFn({ data: data, resourceName: "inquiry" });
     }
   };
 
   useEffect(() => {
     if (mode === "edit") {
       setInquiryId(location.search.split("id=").at(1));
+    } else {
+      queryClient.removeQueries({ queryKey: ["get_inquiry_details"], type: "inactive" });
     }
   }, [location.search, mode]);
 
@@ -84,7 +107,7 @@ const CreateUpdateInquiry = () => {
     }
   }, [myInquiry]);
 
-  if (!myInquiry || !hasData || isPending || (!isSuccess && mode == "edit")) {
+  if (mode == "edit" && (!hasData || isPending || !myInquiry)) {
     return <FullScreenLoader />;
   }
 
@@ -108,10 +131,10 @@ const CreateUpdateInquiry = () => {
                 <Input placeholder="Tiêu đề" />
               </Form.Item>
               <Form.Item name={"status"}>
-                <Select placeholder="Trạng thái của yêu cầu">
-                  <Select.Option value= {InquiryStatus.NEW}>Mới</Select.Option>
-                  <Select.Option value= {InquiryStatus.IN_PROGRESS}>Đang xử lý</Select.Option>
-                  <Select.Option value= {InquiryStatus.DONE}>Đã xử lý</Select.Option>
+                <Select placeholder="Trạng thái của yêu cầu" disabled = {user.role == 'customer'}>
+                  <Select.Option value={InquiryStatus.NEW}>Mới</Select.Option>
+                  <Select.Option value={InquiryStatus.IN_PROGRESS}>Đang xử lý</Select.Option>
+                  <Select.Option value={InquiryStatus.DONE}>Đã xử lý</Select.Option>
                 </Select>
               </Form.Item>
               <h3 className="mb-2 font-medium">Thông tin sản phẩm</h3>
@@ -122,6 +145,8 @@ const CreateUpdateInquiry = () => {
               <Form.Item name={"productModel"}>
                 <Input placeholder="Model máy" value={inquiry.product?.model} />
               </Form.Item>
+
+              
               <h3 className="mb-2">Thuộc tính</h3>
               <Form.List name="productAttributes">
                 {(fields, { add, remove }) => (
@@ -154,6 +179,10 @@ const CreateUpdateInquiry = () => {
                 )}
               </Form.List>
 
+              <Form.Item name={"cashbackAmount"}>
+                <Input placeholder="Tiền hoàn" />
+              </Form.Item>
+
               <div className="mt-5">
                 <label className="inline-block font-medium mb-2" htmlFor="prod-desc">
                   Tải ảnh sản phẩm
@@ -167,7 +196,7 @@ const CreateUpdateInquiry = () => {
               </div>
               <Form.Item className="mt-3">
                 <Button type="primary" htmlType="submit" onClick={submitForm}>
-                  {mode == 'edit'? "Cập nhật": "Tạo yêu cầu"}
+                  {mode == "edit" ? "Cập nhật" : "Tạo yêu cầu"}
                 </Button>
               </Form.Item>
             </Card>

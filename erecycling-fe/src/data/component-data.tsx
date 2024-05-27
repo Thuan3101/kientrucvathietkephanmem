@@ -5,25 +5,17 @@ import {
   MdOutlinePersonOutline,
   MdOutlineSettings,
   MdHelpCenter,
-  MdOutlineHomeRepairService,
   MdSecurity,
   MdDashboard,
-  MdOutlineCalendarMonth,
-  MdOutlineChat,
 } from "react-icons/md";
 
-import { PiMagnifyingGlassDuotone } from "react-icons/pi";
+import { PiCube, PiCubeDuotone, PiMagnifyingGlassDuotone } from "react-icons/pi";
 import { IOperationFilter } from "@/types/form";
 
 export const userMenus: Array<MenuItem> = [
   {
     title: "Tính năng người dùng",
     list: [
-      {
-        label: "Trang chủ",
-        path: "/",
-        icon: <MdOutlineHome size={22} />,
-      },
       {
         label: "Yêu cầu tái chế",
         path: "/inquiry",
@@ -43,35 +35,23 @@ export const adminMenus: Array<MenuItem> = [
         icon: <MdOutlineHome size={22} />,
       },
       {
+        label: "Yêu cầu tái chế",
+        path: "/inquiry",
+        icon: <MdOutlinePersonOutline fontSize={22} />,
+      },
+      {
         label: "Mẫu đánh giá",
         path: "/assessment",
         icon: <PiMagnifyingGlassDuotone fontSize={22} />,
       },
-    ],
-  },
-
-  {
-    title: "Báo cáo",
-    list: [
-      {
-        label: "Báo cáo tổng quan",
-        path: "/authorz",
-        icon: <MdSecurity fontSize={22} />,
-      },
-      {
-        label: "Cài đặt",
-        path: "/setting",
-        icon: <MdOutlineSettings fontSize={22} />,
-      },
 
       {
-        label: "Trợ giúp",
-        path: "/help",
-        icon: <MdHelpCenter fontSize={22} />,
+        label: "Sản phẩm",
+        path: "/product",
+        icon: <PiCubeDuotone fontSize={22} />,
       },
     ],
   },
-
 ];
 
 export const usersBreadcrumb = [

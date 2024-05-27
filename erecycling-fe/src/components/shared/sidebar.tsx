@@ -1,13 +1,18 @@
-import { Avatar } from "antd";
-import { Link, useLocation } from "react-router-dom";
+import { Avatar, Button } from "antd";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { getFullName } from "../../utils/app-utils";
 import { userMenus, adminMenus } from "../../data/component-data";
 import { useGetAuth } from "@/lib/react-query/query";
 const Sidebar = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const activePath = location.pathname.split("/").filter(e => e).at(0);
   const {data: user} = useGetAuth()
   const menuItems = user.role == 'customer' ? userMenus: adminMenus
+  const logout = () => {
+    localStorage.removeItem("access_token");
+    navigate("/login")
+  }
   return (
     <div className="px-3 py-4 text-text-soft w-[270px]">
       <h2 className="text-emerald-500 text-[25px] font-semibold mb-5 text-center">{user.role == 'customer'? 'E Recycling': 'E-recycling Admin'}</h2>
@@ -44,6 +49,10 @@ const Sidebar = () => {
             </div>
           );
         })}
+      </div>
+
+      <div className="mt-20 text-center">
+        <Button type="primary" size="large" onClick={logout} >Đăng xuất</Button>
       </div>
     </div>
   );

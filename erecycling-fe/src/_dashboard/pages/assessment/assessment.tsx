@@ -1,6 +1,7 @@
 import Card from "@/components/shared/card";
 import GenericTable from "@/components/shared/controlled-table/generic-table";
 import OutlineBtn from "@/components/shared/outline-btn";
+import PrimaryButton from "@/components/shared/primary-button";
 import UserFilter from "@/components/user/user-filter";
 import { useGetAuth } from "@/lib/react-query/query";
 import { GeneralColumnType } from "@/types/common";
@@ -54,7 +55,7 @@ function mapper(data: IAssessment[]): Partial<ColumnType>[] {
   return data.map((assessment) => {
     const row: Partial<ColumnType> = {};
     row.key = assessment._id;
-    row.inqruiryTitle = assessment.inquiry.title;
+    row.inqruiryTitle = assessment?.inquiry.title;
 
     row.checker = (
       <div className="flex items-center gap-2">
@@ -119,15 +120,14 @@ const AssessmentList = () => {
             Xuất dữ liệu
           </OutlineBtn>
           <Link to={"/assessment/new"}>
-            <Button className="flex gap-1 items-center text-sm px-3">
+            <PrimaryButton className="flex gap-1 items-center text-sm px-3">
               <BiPlus fontSize={18} />
               Tạo phiếu đánh giá
-            </Button>
+            </PrimaryButton>
           </Link>
         </div>
       </div>
 
-      <UserFilter />
       <Card className="mt-5 pt-0 px-0">
         <GenericTable resourceName="assessment" columns={columns} displayMapper={mapper} enableFilter={false} />
       </Card>

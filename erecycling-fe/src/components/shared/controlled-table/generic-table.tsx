@@ -1,4 +1,4 @@
-import { useDeleteResource, useGetReourceList } from "@/lib/react-query/query";
+import { useDeleteResource, useGetAuth, useGetReourceList } from "@/lib/react-query/query";
 import { GeneralColumnType } from "@/types/common";
 import { GeneralApiResponse, GetQueryParams } from "@/types/utils";
 import { Button, Pagination, PaginationProps, Spin, Table, TableColumnsType, Popconfirm } from "antd";
@@ -11,7 +11,8 @@ import TableFilter from "./table-filter";
 
 type Props<T, U extends GeneralColumnType> = {
   resourceName: string;
-  displayMapper: (data: T[]) => Partial<U>[];
+  maunalAddAction?: boolean;
+  displayMapper: (data: T[], role?: string) => Partial<U>[];
   columns: TableColumnsType<U>;
   defaultPagination?: {
     pageSize: number;
@@ -20,7 +21,7 @@ type Props<T, U extends GeneralColumnType> = {
   defaultSort?: {
     sortCiteria: string;
   };
-  enableFilter: boolean
+  enableFilter: boolean;
 };
 
 function addActionHeader(columns: TableColumnsType) {
@@ -30,6 +31,7 @@ function addActionHeader(columns: TableColumnsType) {
 function addActionColumn<U extends GeneralColumnType>(
   rows: Partial<U>[],
   resourceName: string,
+
   isPendingDelete: boolean,
   deleteFn: UseMutateAsyncFunction<
     GeneralApiResponse<boolean>,
@@ -74,7 +76,13 @@ function addActionColumn<U extends GeneralColumnType>(
   return rows;
 }
 
-export function GenericTable<T, U extends GeneralColumnType>({ resourceName, displayMapper, columns, enableFilter = true }: Props<T, U>) {
+export function GenericTable<T, U extends GeneralColumnType>({
+  resourceName,
+  displayMapper,
+  columns,
+  maunalAddAction = false,
+  enableFilter = true,
+}: Props<T, U>) {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [queries, setQueries] = useState<Partial<GetQueryParams>>({
     searchText: "",
@@ -83,6 +91,7 @@ export function GenericTable<T, U extends GeneralColumnType>({ resourceName, dis
     orders: null,
   });
 
+  const { data: user } = useGetAuth();
   const { isLoading, data: resourcePage } = useGetReourceList(queries, resourceName);
   const { mutateAsync: deleteFn, isPending } = useDeleteResource(resourceName);
 
@@ -110,14 +119,32 @@ export function GenericTable<T, U extends GeneralColumnType>({ resourceName, dis
     );
   return (
     <div className="font-inter">
-      <TableFilter enable = {enableFilter}/>
-      <Table
-        rowSelection={rowSelection}
-        columns={addActionHeader(columns)}
-        dataSource={addActionColumn(displayMapper(resourcePage.data as T[]), resourceName, isPending, deleteFn)}
-        size="large"
-        pagination={false}
-      />
+      <TableFilter enable={enableFilter} />
+      {user.role == "customer" ? (
+        <Table
+          rowSelection={rowSelection}
+          columns={addActionHeader(columns)}
+          dataSource={
+            maunalAddAction == false
+              ? addActionColumn(displayMapper(resourcePage.data as T[]), resourceName, isPending, deleteFn)
+              : displayMapper(resourcePage.data as T[])
+          }
+          size="large"
+          pagination={false}
+        />
+      ) : (
+        <Table
+          rowSelection={rowSelection}
+          columns={addActionHeader(columns)}
+          dataSource={
+            maunalAddAction == false
+              ? addActionColumn(displayMapper(resourcePage.data as T[]), resourceName, isPending, deleteFn)
+              : displayMapper(resourcePage.data as T[], 'staff')
+          }
+          size="large"
+          pagination={false}
+        />
+      )}
       <div className="text-right">
         <Pagination
           current={queries.pageIndex + 1}
