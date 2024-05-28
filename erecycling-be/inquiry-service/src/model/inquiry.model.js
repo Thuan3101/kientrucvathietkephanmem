@@ -45,6 +45,9 @@ const inquirySchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    cashbackAmount: {
+      type: Number
+    },
     product: productSchema,
   },
   {

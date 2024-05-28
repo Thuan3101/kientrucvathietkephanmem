@@ -19,6 +19,22 @@ class AssessmentService {
     return data.data;
   }
 
+  async updateInquiry(id, data, token) {
+    const options = {
+        method: "PATCH", // or 'POST', 'PUT', etc. depending on your use case
+        headers: {
+          "Content-Type": "application/json", // Set the content type if you're sending JSON data
+          internal_api_key: INTERNAL_API_KEY,
+          Authorization: `${token}`,
+        },
+        body: JSON.stringify(data)
+      };
+      const rs = await fetch(`http://localhost:9090/api/inquiry/${id}`, options);
+      const rs1 = await rs.json();
+      // console.log(data)
+      return rs1.data;
+  }
+
   async createNewAssessment(dto) {
     const data = await AssessmentRepository.createNew(dto);
     return data;
@@ -55,6 +71,8 @@ class AssessmentService {
 
   async updateAssessment(id, modifedData, token) {
     const filter = { _id: id };
+    const inquiry = modifedData.inquiry;
+    const _ = await this.updateInquiry(inquiry._id, inquiry, token);
     const data = await Assessment.findOneAndUpdate(filter, modifedData);
     return data;
   }
